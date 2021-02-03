@@ -16,8 +16,26 @@ namespace Infrastructure.Data
             {
                 query = query.Where(spec.Criteria);
             }
+             //check to see if we have orderby or orderbydesc in our specification
+             if (spec.OrderBy != null )
+            {
+                query = query.OrderBy(spec.OrderBy);
+            }
+
+            if (spec.OrderByDescending != null )
+            {
+                query = query.OrderByDescending(spec.OrderByDescending);
+            }
+
+            //pagination
+            if (spec.IsPagingEnabled)
+            {
+                query = query.Skip(spec.Skip).Take(spec.Take);
+            }
+
             query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
             return query;
         }
+        //check to see if we have orderby or orderbydesc in our specification
     }
 }
