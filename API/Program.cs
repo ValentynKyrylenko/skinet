@@ -28,7 +28,7 @@ namespace API
                 catch (Exception ex)
                 {
                     var logger = loggerFactory.CreateLogger<Program>();
-                    logger.LogError(ex, "Error occured during migration");
+                    logger.LogError(ex, "Error during migration");
                 }
             }
             host.Run();

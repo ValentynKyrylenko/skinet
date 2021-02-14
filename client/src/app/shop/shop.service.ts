@@ -4,6 +4,7 @@ import { IBrand } from '../share/Models/brands';
 import { IPagination } from '../share/Models/pagination';
 import { IType } from '../share/Models/productType';
 import {map} from 'rxjs/operators';
+import { shopParams } from '../share/Models/shopParams';
 
 @Injectable({
   providedIn: 'root'
@@ -13,20 +14,26 @@ export class ShopService {
 
   constructor(private http: HttpClient) { }
 
-  getProducts(brandId?: number, typeId?: number, sort?:string) {
+  getProducts(shopParams: shopParams) {
 //lets create a params object which we can pass to our API as query sting
   let params = new HttpParams();
 
-  if (brandId) {
-    params = params.append('brandId', brandId.toString());
+  if (shopParams.brandId !== 0) {
+    params = params.append('brandId', shopParams.brandId.toString());
   }
-  if (typeId){
-    params = params.append('typeId', typeId.toString());
+  if (shopParams.typeId !==0){
+    params = params.append('typeId', shopParams.typeId.toString());
+  }
+  if (shopParams.search){
+    params = params.append('search', shopParams.search);
   }
 
-  if (sort) {
-    params = params.append('sort', sort);
-  }
+
+    params = params.append('sort', shopParams.sort);
+    //add our pagination to the parameters
+    params = params.append('pageIndex', shopParams.pageNumber.toString());
+    params = params.append('pageIndex', shopParams.pageSize.toString());
+  
 
     return this.http.get<IPagination>(this.baseUrl + 'products', {observe: 'response', params})
     .pipe(
